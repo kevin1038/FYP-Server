@@ -124,7 +124,7 @@ app.set('view engine', 'ejs');
  	});
  });
 
- app.get('/logout', function(req, res) {
+ app.post('/logout', function(req, res) {
  	req.session = null;
  	res.redirect('/');
  });
