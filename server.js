@@ -111,14 +111,11 @@ app.post('/login', function(req, res) {
 		const db = client.db(dbName);
 
 		findUser(db, user, function(result) {
+			client.close();
 			if (result) {
 				req.session.authenticated = true;
 				req.session.userid = result.userid;
-				
-				findRecords(db, {}, function(result) {
-					client.close();
-					res.render('index', {records: result});
-				});
+				res.redirect('/');
 			} else {
 				res.render('login', {warning: 'Incorrect user ID or password.'});
 			}

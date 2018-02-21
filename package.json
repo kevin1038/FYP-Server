@@ -1,39 +1,27 @@
 {
-    "name": "crammed-report-system",
-    "description": "Report System",
-    "author": "Crammed",
-    "version": "0.0.1",
-    "devDependencies": {
-        "babel-core": "^6.26.0",
-        "babel-loader": "^7.1.2",
-        "babel-preset-env": "^1.6.1",
-        "babel-preset-react": "^6.24.1",
-        "css-loader": "^0.28.9",
-        "expose-loader": "^0.7.4",
-        "extract-text-webpack-plugin": "^3.0.2",
-        "style-loader": "^0.20.2",
-        "webpack": "^3.11.0"
+    "name": "report-system",
+    "version": "1.0.0",
+    "description": "Report System for Elderly Cooking",
+    "main": "server.js",
+    "scripts": {
+        "dev": "nodemon server.js",
+        "bundle": "webpack --config webpack.config.js",
+        "build": "webpack -p",
+        "start": "node server.js"
     },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
     "dependencies": {
         "body-parser": "^1.18.2",
-        "bootstrap": "^4.0.0",
-        "chart.js": "^2.7.1",
         "cookie-session": "^2.0.0-beta.3",
-        "datatables.net-bs4": "^1.10.16",
         "ejs": "^2.5.7",
         "express": "^4.16.2",
         "express-fileupload": "^0.4.0",
-        "jquery": "^3.3.1",
         "moment": "^2.20.1",
-        "mongodb": "^3.0.2",
-        "popper.js": "^1.12.9",
-        "react": "^16.2.0",
-        "react-dom": "^16.2.0"
+        "mongodb": "^3.0.2"
     },
-    "engine": "node >= 0.10.0",
-    "scripts": {
-        "bundle": "webpack --config webpack.config.js",
-        "build": "webpack -p",
-        "start": "node server"
+    "devDependencies": {
+        "nodemon": "^1.15.1"
     }
 }
