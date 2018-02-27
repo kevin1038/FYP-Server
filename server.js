@@ -39,7 +39,7 @@ function auth(req, res, next) {
 
 // Routing
 app.post('/test', function(req, res, next) {
-	var userInfo = {};
+	/*var userInfo = {};
 	var score = {};
 	var datetime = new Date();
 	var clientapi = req.body.api;
@@ -47,7 +47,8 @@ app.post('/test', function(req, res, next) {
 	userInfo['username'] = req.body.username;
 	score['date'] = datetime;
 	score['level' + currentlevel] = req.body.levelscore;
-	userInfo['Score'] = score;
+	userInfo['Score'] = score;*/
+	record = request.body;
 
 	if (clientapi == apikey){
 		MongoClient.connect(mongourl, function(err, client) {
@@ -55,7 +56,7 @@ app.post('/test', function(req, res, next) {
 			const db = client.db(dbName);
 
 			console.log('Connected to MongoDB\n');
-			insertRecord(db,userInfo,function(result){
+			insertRecord(db,record,function(result){
 				client.close();
 				console.log('/main disconnected to MongoDB\n');
 				res.status(200);
