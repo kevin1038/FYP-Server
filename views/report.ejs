@@ -63,7 +63,7 @@
 						"targets": 0,
 						"orderable": false,
 					}],
-					"order": [[ 1, "asc" ]]
+					"order": [[1, "asc"]]
 				});
 			});
 
@@ -72,15 +72,15 @@
 				type: 'line',
 				data: {
 					labels: [],
-					datasets: [{
-						label: 'Level 1',
-						data: [],
-						lineTension: 0,
-						backgroundColor: 'transparent',
-						borderColor: '#007bff',
-						borderWidth: 4,
-						pointBackgroundColor: '#007bff'
-					}]
+					datasets: [
+						{
+							label: 'theTimeUsedToRememberTheitem',
+							data: [],
+							backgroundColor: 'transparent',
+							borderColor: '#007bff',
+							pointBackgroundColor: '#007bff'
+						}
+					]
 				},
 				options: {
 					scales: {
@@ -98,7 +98,7 @@
 			var records = <%- JSON.stringify(records) %>;
 			for (var i in records) {
 				config.data.labels.push(moment(records[i].date).format('ll'));
-				config.data.datasets[0].data.push(records[i]);
+				config.data.datasets[0].data.push(records[i].Record[0].theTimeUsedToRememberTheitem);
 			}
 			var myChart = new Chart(ctx, config);
 		</script>
