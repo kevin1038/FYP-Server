@@ -6,15 +6,42 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	 crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.css" />
 </head>
 
 <body>
 	<% include partials/header %>
-
 		<div class="container" style="margin-top:100px">
 			<h3>
-				<%= records[0].username %>'s Report</h3>
-			<canvas class="my-4" id="myChart" width="900" height="380"></canvas>
+				<%= records[0].UserName %>'s Report
+			</h3>
+			<br>
+			<!-- <canvas class="my-4" id="myChart" width="900" height="380"></canvas> -->
+			<br>
+			<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
+				<thead class="thead-dark">
+					<tr>
+						<th>#</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for (var i in records) { %>
+						<tr>
+							<td>
+								<%= parseInt(i)+1 %>
+							</td>
+							<td>
+								<form action="/reportByDate" method="post">
+									<button type="submit" class="btn btn-link" name="id" value="<%= records[i]._id %>">
+										<%= moment(records[i].date).format("YYYY-MM-DD HH:mm") %>
+									</button>
+								</form>
+							</td>
+						</tr>
+						<% } %>
+				</tbody>
+			</table>
 		</div>
 
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -24,8 +51,22 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		 crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 		<script>
+			$(document).ready(function () {
+				$('#myTable').DataTable({
+					'info': false,
+					"paging": false,
+					"searching": false,
+					"columnDefs": [{
+						"targets": 0,
+						"orderable": false,
+					}],
+					"order": [[ 1, "asc" ]]
+				});
+			});
+
 			var ctx = document.getElementById("myChart");
 			var config = {
 				type: 'line',
@@ -56,8 +97,8 @@
 			};
 			var records = <%- JSON.stringify(records) %>;
 			for (var i in records) {
-				config.data.labels.push(moment(records[i].Score.date).format('ll'));
-				config.data.datasets[0].data.push(records[i].Score.level1);
+				config.data.labels.push(moment(records[i].date).format('ll'));
+				config.data.datasets[0].data.push(records[i]);
 			}
 			var myChart = new Chart(ctx, config);
 		</script>

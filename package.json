@@ -4,10 +4,7 @@
     "description": "Report System for Elderly Cooking",
     "main": "server.js",
     "scripts": {
-        "dev": "nodemon server.js",
-        "bundle": "webpack --config webpack.config.js",
-        "build": "webpack -p",
-        "start": "node server.js"
+        "start": "nodemon server.js"
     },
     "keywords": [],
     "author": "",

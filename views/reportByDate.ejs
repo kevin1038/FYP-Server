@@ -6,29 +6,43 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	 crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.css" />
 </head>
 
 <body>
 	<% include partials/header %>
 		<div class="container" style="margin-top:100px">
-			<h3>User</h3>
+			<h3>
+				<%= record.UserName %>'s Report on
+					<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
+			</h3>
 			<br>
 			<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
 				<thead class="thead-dark">
 					<tr>
-						<th>Name</th>
+						<th>#</th>
+						<th>Item remember time</th>
+						<th>Time for serving customer</th>
+						<th>Hints used</th>
+						<th>Hints used (after distraction)</th>
 					</tr>
 				</thead>
 				<tbody>
-					<% for (var i in users) { %>	
+					<% for (var i in record.Record) { %>
 						<tr>
+							<td>Level
+								<%= parseInt(i)+1 %>
+							</td>
 							<td>
-								<form action="/report" method="post">
-									<button type="submit" class="btn btn-link" name="username" value="<%= users[i] %>">
-										<%= users[i] %>
-									</button>
-								</form>
+								<%= record.Record[i].theTimeUsedToRememberTheitem %>
+							</td>
+							<td>
+								<%= record.Record[i].theTimeUsedToServeCustomer.map(function(x) { return parseInt(x, 10) }) %>
+							</td>
+							<td>
+								<%= record.Record[i].numOfHintsUsedForEachCustomer %>
+							</td>
+							<td>
+								<%= record.Record[i].numOfHintsUsedAfterDistractionHappend %>
 							</td>
 						</tr>
 						<% } %>
@@ -42,19 +56,6 @@
 		 crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		 crossorigin="anonymous"></script>
-		<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js"></script>
-		<script>
-			$(document).ready(function () {
-				$('#myTable').DataTable({
-					'info': false,
-					"columnDefs": [{
-						"targets": 'actions',
-						"orderable": false,
-					}],
-					"iDisplayLength": 25
-				});
-			});
-		</script>
 </body>
 
 </html>
