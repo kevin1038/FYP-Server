@@ -21,30 +21,67 @@
 			<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
 				<thead class="thead-dark">
 					<tr>
-						<th>#</th>
+						<th>Level</th>
 						<th>Item remember time</th>
 						<th>Time for serving customer</th>
 						<th>Hints used</th>
 						<th>Hints used (after distraction)</th>
+						<th>Hints used (after incorrect)</th>
+						<th>Incorrect cook</th>
 					</tr>
 				</thead>
 				<tbody>
 					<% for (var i in record.Record) { %>
 						<tr>
-							<td>Level
+							<td>
 								<%= parseInt(i)+1 %>
 							</td>
 							<td>
 								<%= record.Record[i].theTimeUsedToRememberTheitem %>
 							</td>
 							<td>
-								<%= record.Record[i].theTimeUsedToServeCustomer.map(function(x) { return parseInt(x, 10) }) %>
+								<!-- <%= record.Record[i].theTimeUsedToServeCustomer.map(function(x) { return parseInt(x, 10) }) %> -->
+								<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
+									<span class="badge badge-secondary">
+										<%= parseInt(record.Record[i].theTimeUsedToServeCustomer[j]) %>
+									</span>
+									<% } %>
 							</td>
 							<td>
-								<%= record.Record[i].numOfHintsUsedForEachCustomer %>
+								<% for(j in record.Record[i].numOfHintsUsedForEachCustomer) { %>
+									<h5>
+										<span class="badge badge-secondary">
+											<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
+										</span>
+									</h5>
+									<% } %>
 							</td>
 							<td>
-								<%= record.Record[i].numOfHintsUsedAfterDistractionHappend %>
+								<% for(j in record.Record[i].numOfHintsUsedAfterDistractionHappend) { %>
+									<h5>
+										<span class="badge badge-light">
+											<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
+										</span>
+									</h5>
+									<% } %>
+
+							</td>
+							<td>
+								<ul class="list-group">
+									<% for(j in record.Record[i].numOfHintsUsedAfterWrongAnswer) { %>
+										<li class="list-group-item">
+											<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
+										</li>
+										<% } %>
+								</ul>
+							</td>
+							<td>
+								<% for(j in record.Record[i].numOfWrongCounterForEachCustomer) { %>
+									<span class="badge badge-primary">
+										<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
+									</span>
+									<% } %>
+
 							</td>
 						</tr>
 						<% } %>

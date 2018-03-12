@@ -37,7 +37,6 @@ function auth(req, res, next) {
 		res.redirect('/login');
 }
 
-// Routing
 app.post('/test', function (req, res, next) {
 	/*var userInfo = {};
 	var score = {};
@@ -160,7 +159,6 @@ app.post('/logout', function (req, res) {
 	res.redirect('/login');
 });
 
-// Business Functions
 function insertRecord(db, new_user, callback) {
 	db.collection('records').insertOne(new_user, function (err, result) {
 		assert.equal(null, err);
