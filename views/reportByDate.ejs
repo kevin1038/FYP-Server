@@ -13,91 +13,92 @@
 <body>
 	<% include partials/header %>
 		<div class="container-fluid" style="margin-top:100px"></div>
-			<h3 style="text-align:center">
-				<%= record.UserName %>'s Report on
-					<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
-			</h3>
-			<br>
-			<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
-				<thead class="thead-dark">
+		<h3 style="text-align:center">
+			<%= record.UserName %>'s Report on
+				<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
+		</h3>
+		<br>
+		<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
+			<thead class="thead-dark">
+				<tr>
+					<th>Level</th>
+					<th>Item remember time(s)</th>
+					<th>Task</th>
+					<th>Time for serving customer(s)</th>
+					<th>Hints used</th>
+					<th>Hints used (after distraction)</th>
+					<th>Hints used (after incorrect)</th>
+					<th>Incorrect cook</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for (var i in record.Record) { %>
 					<tr>
-						<th>Level</th>
-						<th>Item remember time(s)</th>
-						<th>Task</th>
-						<th>Time for serving customer(s)</th>
-						<th>Hints used</th>
-						<th>Hints used (after distraction)</th>
-						<th>Hints used (after incorrect)</th>
-						<th>Incorrect cook</th>
+						<td>
+							<%= parseInt(i)+1 %>
+						</td>
+						<td>
+							<%= record.Record[i].theTimeUsedToRememberTheitem %>
+						</td>
+						<td>
+							<ul class="list-group">
+								<% for (j in record.Record[i].theTimeUsedToServeCustomer) { %>
+									<li class="list-group-item">
+										Task
+										<%= parseInt(j)+1 %>
+									</li>
+									<% } %>
+							</ul>
+						</td>
+						<td>
+							<ul class="list-group">
+								<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
+									<li class="list-group-item">
+										<%= parseInt(record.Record[i].theTimeUsedToServeCustomer[j]) %>
+									</li>
+									<% } %>
+							</ul>
+						</td>
+						<td>
+							<ul class="list-group">
+								<% for(j in record.Record[i].numOfHintsUsedForEachCustomer) { %>
+									<li class="list-group-item">
+										<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
+									</li>
+									<% } %>
+							</ul>
+						</td>
+						<td>
+							<ul class="list-group">
+								<% for(j in record.Record[i].numOfHintsUsedAfterDistractionHappend) { %>
+									<li class="list-group-item">
+										<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
+									</li>
+									<% } %>
+							</ul>
+						</td>
+						<td>
+							<ul class="list-group">
+								<% for(j in record.Record[i].numOfHintsUsedAfterWrongAnswer) { %>
+									<li class="list-group-item">
+										<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
+									</li>
+									<% } %>
+							</ul>
+						</td>
+						<td>
+							<ul class="list-group">
+								<% for(j in record.Record[i].numOfWrongCounterForEachCustomer) { %>
+									<li class="list-group-item">
+										<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
+									</li>
+									<% } %>
+							</ul>
+						</td>
 					</tr>
-				</thead>
-				<tbody>
-					<% for (var i in record.Record) { %>
-						<tr>
-							<td>
-								<%= parseInt(i)+1 %>
-							</td>
-							<td>
-								<%= record.Record[i].theTimeUsedToRememberTheitem %>
-							</td>
-							<td>
-								<ul class="list-group">
-									<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
-										<li class="list-group-item">
-											Task <%= parseInt(j)+1 %>
-										</li>
-										<% } %>
-								</ul>
-							</td>
-							<td>
-								<ul class="list-group">
-									<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
-										<li class="list-group-item">
-											<%= parseInt(record.Record[i].theTimeUsedToServeCustomer[j]) %>
-										</li>
-										<% } %>
-								</ul>
-							</td>
-							<td>
-								<ul class="list-group">
-									<% for(j in record.Record[i].numOfHintsUsedForEachCustomer) { %>
-										<li class="list-group-item">
-											<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
-										</li>
-										<% } %>
-								</ul>
-							</td>
-							<td>
-								<ul class="list-group">
-									<% for(j in record.Record[i].numOfHintsUsedAfterDistractionHappend) { %>
-										<li class="list-group-item">
-											<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
-										</li>
-										<% } %>
-								</ul>
-							</td>
-							<td>
-								<ul class="list-group">
-									<% for(j in record.Record[i].numOfHintsUsedAfterWrongAnswer) { %>
-										<li class="list-group-item">
-											<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
-										</li>
-										<% } %>
-								</ul>
-							</td>
-							<td>
-								<ul class="list-group">
-									<% for(j in record.Record[i].numOfWrongCounterForEachCustomer) { %>
-										<li class="list-group-item">
-											<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
-										</li>
-										<% } %>
-								</ul>
-							</td>
-						</tr>
-						<% } %>
-				</tbody>
-			</table>
+					<% } %>
+			</tbody>
+		</table>
 		</div>
 
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -115,9 +116,6 @@
 					"info": false,
 					"searching": false,
 					dom: 'Bfrtip',
-					buttons: [
-						'csvHtml5'
-					]
 				});
 			});
 		</script>
