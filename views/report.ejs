@@ -12,11 +12,20 @@
 <body>
 	<% include partials/header %>
 		<div class="container" style="margin-top:100px">
-			<h3>
+			<h3 style="text-align:center">
 				<%= records[0].UserName %>'s Report
 			</h3>
-			<br>
-			<br>
+			<p>
+				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseChart" aria-expanded="false"
+				 aria-controls="collapseChart">
+					Overall Performance
+				</button>
+			</p>
+			<div class="collapse" id="collapseChart">
+				<div class="card card-body">
+					...
+				</div>
+			</div>
 			<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
 				<thead class="thead-dark">
 					<tr>

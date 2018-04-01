@@ -6,99 +6,145 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	 crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css"
-	/>
 </head>
 
 <body>
 	<% include partials/header %>
-		<div class="container-fluid" style="margin-top:100px"></div>
-		<h3 style="text-align:center">
-			<%= record.UserName %>'s Report on
-				<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
-		</h3>
-		<br>
-		<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
-			<thead class="thead-dark">
-				<tr>
-					<th>Level</th>
-					<th>Item remember time(s)</th>
-					<th>Task</th>
-					<th>Time for serving customer(s)</th>
-					<th>Hints used</th>
-					<th>Hints used (after distraction)</th>
-					<th>Hints used (after incorrect)</th>
-					<th>Incorrect cook</th>
-				</tr>
-			</thead>
-			<tbody>
-				<% for (var i in record.Record) { %>
-					<tr>
-						<td>
-							<%= parseInt(i)+1 %>
-						</td>
-						<td>
-							<%= record.Record[i].theTimeUsedToRememberTheitem %>
-						</td>
-						<td>
-							<ul class="list-group">
-								<% for (j in record.Record[i].theTimeUsedToServeCustomer) { %>
-									<li class="list-group-item">
-										Task
-										<%= parseInt(j)+1 %>
-									</li>
-									<% } %>
-							</ul>
-						</td>
-						<td>
-							<ul class="list-group">
-								<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
-									<li class="list-group-item">
-										<%= parseInt(record.Record[i].theTimeUsedToServeCustomer[j]) %>
-									</li>
-									<% } %>
-							</ul>
-						</td>
-						<td>
-							<ul class="list-group">
-								<% for(j in record.Record[i].numOfHintsUsedForEachCustomer) { %>
-									<li class="list-group-item">
-										<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
-									</li>
-									<% } %>
-							</ul>
-						</td>
-						<td>
-							<ul class="list-group">
-								<% for(j in record.Record[i].numOfHintsUsedAfterDistractionHappend) { %>
-									<li class="list-group-item">
-										<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
-									</li>
-									<% } %>
-							</ul>
-						</td>
-						<td>
-							<ul class="list-group">
-								<% for(j in record.Record[i].numOfHintsUsedAfterWrongAnswer) { %>
-									<li class="list-group-item">
-										<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
-									</li>
-									<% } %>
-							</ul>
-						</td>
-						<td>
-							<ul class="list-group">
-								<% for(j in record.Record[i].numOfWrongCounterForEachCustomer) { %>
-									<li class="list-group-item">
-										<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
-									</li>
-									<% } %>
-							</ul>
-						</td>
-					</tr>
-					<% } %>
-			</tbody>
-		</table>
+		<div class="container-fluid" style="margin-top:100px;margin-bottom:100px">
+			<form action="/report" method="post">
+				<button type="submit" class="btn btn-outline-secondary" name="username" value="<%= record.UserName %>">
+					Back
+				</button>
+			</form>
+			<br>
+			<div class="card text-center">
+				<h3 class="card-header">
+					<%= record.UserName %>'s Report on
+						<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
+				</h3>
+				<div class="card-body">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics"
+							 aria-selected="true">Statistics</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
+						</li>
+					</ul>
+					<br />
+					<div class="tab-content" id="myTabContent">
+						<div class="tab-pane fade show active" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
+							<table id="myTable" class="table table-hover" cellspacing="0" width="100%">
+								<thead>
+									<tr class="thead-dark">
+										<th>Level</th>
+										<th>Item remember time(s)</th>
+										<th>No. of task (customer)</th>
+										<th>Time for serving customer(s)</th>
+										<th>Hints used</th>
+										<th>Hints used (after distraction)</th>
+										<th>Hints used (after incorrect)</th>
+										<th>Incorrect cook</th>
+										<th>Incorrect cook (after distraction)</th>
+										<th>Distraction</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% for (var i in record.Record) { %>
+										<tr>
+											<td>
+												<%= parseInt(i)+1 %>
+											</td>
+											<td>
+												<%= record.Record[i].theTimeUsedToRememberTheitem %>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for (j in record.Record[i].theTimeUsedToServeCustomer) { %>
+														<li class="list-group-item">
+															Task
+															<%= parseInt(j)+1 %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
+														<li class="list-group-item">
+															<%= Math.round(record.Record[i].theTimeUsedToServeCustomer[j]) %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].numOfHintsUsedForEachCustomer) { %>
+														<li class="list-group-item">
+															<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].numOfHintsUsedAfterDistractionHappend) { %>
+														<li class="list-group-item">
+															<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].numOfHintsUsedAfterWrongAnswer) { %>
+														<li class="list-group-item">
+															<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].numOfWrongCounterForEachCustomer) { %>
+														<li class="list-group-item">
+															<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].numOfWrongCounterAfterDistractionHappend) { %>
+														<li class="list-group-item">
+															<%= record.Record[i].numOfWrongCounterAfterDistractionHappend[j] %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+											<td>
+												<ul class="list-group">
+													<% for(j in record.Record[i].isDistractionHappendForCustomer) { %>
+														<li class="list-group-item">
+															<%= record.Record[i].isDistractionHappendForCustomer[j] %>
+														</li>
+														<% } %>
+												</ul>
+											</td>
+										</tr>
+										<% } %>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="performance-tab">
+							<div class="wrapper" style="max-width: 900px; margin: auto">
+								<canvas id="myChart"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -107,16 +153,31 @@
 		 crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		 crossorigin="anonymous"></script>
-		<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 		<script>
-			$(document).ready(function () {
-				$('#myTable').DataTable({
-					"paging": false,
-					"ordering": false,
-					"info": false,
-					"searching": false,
-					dom: 'Bfrtip',
-				});
+			var ctx = document.getElementById("myChart").getContext('2d');
+			var data = {
+				labels: ['short-term memory', 'recall', 'self-efficacy', 'attention'],
+				datasets: [{
+					label: 'performance',
+					backgroundColor: 'rgba(54, 162, 235, 0.5)',
+					borderColor: 'rgba(54, 162, 235)',
+					pointBackgroundColor: 'rgba(54, 162, 235)',
+					data: [91.2, 96, 96, 80]
+				}]
+			};
+			var myRadarChart = new Chart(ctx, {
+				type: 'radar',
+				data: data,
+				options: {
+					legend: false,
+					scale: {
+						ticks: {
+							min: 0,
+							max: 100
+						}
+					}
+				}
 			});
 		</script>
 </body>

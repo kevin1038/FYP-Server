@@ -10,7 +10,6 @@ app.locals.moment = require('moment');
 
 var mongourl = 'mongodb://user:password@ds239638.mlab.com:39638/report';
 var dbName = 'report';
-//var mongourl = 'mongodb://noctis:123456@ds141434.mlab.com:41434/noctisyeung';
 var apikey = '0d8144c5-4df7-4953-b813-f1104fe86dd1';
 
 //The below part is setting up the requirement
@@ -38,22 +37,36 @@ function auth(req, res, next) {
 }
 
 app.post('/test', function (req, res, next) {
-	/*var userInfo = {};
-	var score = {};
-	var datetime = new Date();
-	var clientapi = req.body.api;
-	var currentlevel = req.body.currentlevel;
-	userInfo['username'] = req.body.username;
-	score['date'] = datetime;
-	score['level' + currentlevel] = req.body.levelscore;
-	userInfo['Score'] = score;*/
+	var distCount = nondistCount = 0;
+
 	record = req.body;
 	record['date'] = new Date();
+	record['short-term memory'] = record['recall'] = record['self-efficacy'] = record['attention'] = 0;
+
+	for (var i in record.Record) {
+		for (var j in record.Record[i].theTimeUsedToServeCustomer) {
+			if (record.Record[i].isDistractionHappendForCustomer[j]) {
+				record['attention'] += 50 - 10 * record.Record[i].numOfWrongCounterAfterDistractionHappend[j]
+					+ 50 - 10 * record.Record[i].numOfHintsUsedAfterDistractionHappend[j];
+				distCount++;
+			} else {
+				record['short-term memory'] += 100 - Math.round(record.Record[i].theTimeUsedToServeCustomer[j]);
+				record['recall'] += 100 - 20 * record.Record[i].numOfWrongCounterForEachCustomer[j];
+				record['self-efficacy'] += 100 - 20 * record.Record[i].numOfHintsUsedForEachCustomer[j];
+				nondistCount++;
+			}
+		}
+	}
+
+	record['short-term memory'] = Math.max(0, record['short-term memory'] /= nondistCount);
+	record['recall'] = Math.max(0, record['recall'] /= nondistCount);
+	record['self-efficacy'] = Math.max(0, record['self-efficacy'] /= nondistCount);
+	record['attention'] = Math.max(0, record['attention'] /= distCount);
 
 	MongoClient.connect(mongourl, function (err, client) {
 		assert.equal(null, err);
 		const db = client.db(dbName);
-
+		
 		console.log('Connected to MongoDB\n');
 		insertRecord(db, record, function (result) {
 			client.close();
@@ -159,17 +172,16 @@ app.post('/logout', function (req, res) {
 	res.redirect('/login');
 });
 
-function insertRecord(db, new_user, callback) {
-	db.collection('records').insertOne(new_user, function (err, result) {
+function insertRecord(db, record, callback) {
+	db.collection('records').insertOne(record, function (err, result) {
 		assert.equal(null, err);
-		console.log('User Created');
 		callback(result);
 	});
 };
 
 function findRecords(db, criteria, callback) {
 	var records = [];
-	var cursor = db.collection('records').find(criteria);
+	var cursor = db.collection('records').find(criteria).sort({ date: 1 });
 
 	cursor.each(function (err, result) {
 		assert.equal(null, err);
