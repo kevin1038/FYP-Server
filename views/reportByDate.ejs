@@ -155,15 +155,20 @@
 		 crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 		<script>
+			function generateData() {
+				var data = ['<%= record["short-term memory"] %>', '<%= record["recall"] %>', '<%= record["self-efficacy"] %>', '<%= record["attention"] %>'];
+				return data;
+			}
+
 			var ctx = document.getElementById("myChart").getContext('2d');
 			var data = {
 				labels: ['short-term memory', 'recall', 'self-efficacy', 'attention'],
 				datasets: [{
-					label: 'performance',
+					label: 'Performance',
 					backgroundColor: 'rgba(54, 162, 235, 0.5)',
 					borderColor: 'rgba(54, 162, 235)',
 					pointBackgroundColor: 'rgba(54, 162, 235)',
-					data: [91.2, 96, 96, 80]
+					data: generateData()
 				}]
 			};
 			var myRadarChart = new Chart(ctx, {
@@ -175,6 +180,9 @@
 						ticks: {
 							min: 0,
 							max: 100
+						},
+						pointLabels: {
+							  fontSize: 14
 						}
 					}
 				}

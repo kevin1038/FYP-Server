@@ -16,14 +16,13 @@
 				<%= records[0].UserName %>'s Report
 			</h3>
 			<p>
-				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseChart" aria-expanded="false"
-				 aria-controls="collapseChart">
+				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseChart" aria-expanded="false" aria-controls="collapseChart">
 					Overall Performance
 				</button>
 			</p>
 			<div class="collapse" id="collapseChart">
 				<div class="card card-body">
-					...
+					<canvas id="myChart"></canvas>
 				</div>
 			</div>
 			<table id="myTable" class="table table-bordered" cellspacing="0" width="100%">
@@ -58,20 +57,53 @@
 		 crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		 crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 		<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 		<script>
 			$(document).ready(function () {
 				$('#myTable').DataTable({
-					'info': false,
+					"info": false,
 					"paging": false,
 					"searching": false,
 					"columnDefs": [{
 						"targets": 0,
 						"orderable": false,
 					}],
-					"order": [[1, "asc"]]
+					"order": [1, "asc"]
 				});
+			});
+
+			function generateData() {
+				var data = ['<%= average[0].shortterm %>', '<%= average[0].recall %>', '<%= average[0].selfefficacy %>', '<%= average[0].attention %>'];
+				return data;
+			}
+
+			var ctx = document.getElementById("myChart").getContext('2d');
+			var data = {
+				labels: ['short-term memory', 'recall', 'self-efficacy', 'attention'],
+				datasets: [{
+					label: 'Performance',
+					backgroundColor: 'rgba(54, 162, 235, 0.5)',
+					borderColor: 'rgba(54, 162, 235)',
+					pointBackgroundColor: 'rgba(54, 162, 235)',
+					data: generateData()
+				}]
+			};
+			var myRadarChart = new Chart(ctx, {
+				type: 'radar',
+				data: data,
+				options: {
+					legend: false,
+					scale: {
+						ticks: {
+							min: 0,
+							max: 100
+						},
+						pointLabels: {
+							fontSize: 14
+						}
+					}
+				}
 			});
 		</script>
 </body>

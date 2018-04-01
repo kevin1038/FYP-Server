@@ -38,13 +38,12 @@ function auth(req, res, next) {
 
 app.post('/test', function (req, res, next) {
 	var distCount = nondistCount = 0;
-
 	record = req.body;
 	record['date'] = new Date();
 	record['short-term memory'] = record['recall'] = record['self-efficacy'] = record['attention'] = 0;
 
 	for (var i in record.Record) {
-		for (var j in record.Record[i].theTimeUsedToServeCustomer) {
+		for (var j in record.Record[i].isDistractionHappendForCustomer) {
 			if (record.Record[i].isDistractionHappendForCustomer[j]) {
 				record['attention'] += 50 - 10 * record.Record[i].numOfWrongCounterAfterDistractionHappend[j]
 					+ 50 - 10 * record.Record[i].numOfHintsUsedAfterDistractionHappend[j];
@@ -58,21 +57,31 @@ app.post('/test', function (req, res, next) {
 		}
 	}
 
-	record['short-term memory'] = Math.max(0, record['short-term memory'] /= nondistCount);
-	record['recall'] = Math.max(0, record['recall'] /= nondistCount);
-	record['self-efficacy'] = Math.max(0, record['self-efficacy'] /= nondistCount);
-	record['attention'] = Math.max(0, record['attention'] /= distCount);
+	if (nondistCount == 0) {
+		record['short-term memory'] = null;
+		record['recall'] = null;
+		record['self-efficacy'] = null;
+	} else {
+		record['short-term memory'] = Math.max(0, record['short-term memory'] /= nondistCount);
+		record['recall'] = Math.max(0, record['recall'] /= nondistCount);
+		record['self-efficacy'] = Math.max(0, record['self-efficacy'] /= nondistCount);
+	}
+
+	if (distCount == 0) {
+		record['attention'] = null;
+	} else {
+		record['attention'] = Math.max(0, record['attention'] /= distCount);
+	}
 
 	MongoClient.connect(mongourl, function (err, client) {
 		assert.equal(null, err);
 		const db = client.db(dbName);
-		
+
 		console.log('Connected to MongoDB\n');
 		insertRecord(db, record, function (result) {
 			client.close();
 			console.log('/main disconnected to MongoDB\n');
 			res.status(200);
-			res.send("OK")
 		});
 	});
 });
@@ -98,8 +107,10 @@ app.post('/report', auth, function (req, res) {
 		const db = client.db(dbName);
 
 		findRecords(db, criteria, function (result) {
-			client.close();
-			res.render('report', { records: result });
+			findAvg(db, criteria['UserName'], function (avgResult) {
+				client.close();
+				res.render('report', { records: result, average: avgResult });
+			});
 		});
 	});
 });
@@ -180,15 +191,29 @@ function insertRecord(db, record, callback) {
 };
 
 function findRecords(db, criteria, callback) {
-	var records = [];
-	var cursor = db.collection('records').find(criteria).sort({ date: 1 });
-
-	cursor.each(function (err, result) {
+	db.collection('records').find(criteria).sort({ date: 1 }).toArray(function (err, result) {
 		assert.equal(null, err);
-		if (result != null)
-			records.push(result);
-		else
-			callback(records);
+		callback(result);
+	});
+}
+
+function findAvg(db, user, callback) {
+	db.collection('records').aggregate([
+		{
+			$match: { UserName: user }
+		},
+		{
+			$group: {
+				_id: '$UserName',
+				shortterm: { $avg: '$short-term memory' },
+				recall: { $avg: '$recall' },
+				selfefficacy: { $avg: '$self-efficacy' },
+				attention: { $avg: '$attention' },
+			}
+		}
+	]).toArray(function (err, result) {
+		assert.equal(null, err);
+		callback(result);
 	});
 }
 
@@ -200,7 +225,7 @@ function findRecord(db, criteria, callback) {
 }
 
 function distinctUsers(db, callback) {
-	db.collection('records').distinct("UserName", function (err, result) {
+	db.collection('records').distinct('UserName', function (err, result) {
 		assert.equal(null, err);
 		callback(result);
 	});
