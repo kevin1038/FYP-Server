@@ -6,6 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	 crossorigin="anonymous">
+	<style>
+		.alert {
+			display: inline-block;
+		}
+	</style>
 </head>
 
 <body>
@@ -133,7 +138,78 @@
 														<% } %>
 												</ul>
 											</td>
-											<td></td>
+											<td>
+												<a class="btn btn-primary" data-toggle="collapse" href="#collapsePerformance<%=i%>" role="button" aria-expanded="false" aria-controls="collapsePerformance<%=i%>">
+													+
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td class="text-left" colspan="11">
+												<div class="collapse" id="collapsePerformance<%=i%>">
+													<div class="row">
+														<% for(j in record.Record[i]['short-term memory']) { %>
+															<div class="col-sm">
+																<p>
+
+																</p>
+																<h5>
+																	<span class="badge badge-secondary">Task
+																		<%= parseInt(j)+1 %>
+																	</span>
+																</h5>
+																<% if (record.Record[i]['attention'][j] == null) { %>
+																	<% if (record.Record[i]['short-term memory'][j] >= 50) { %>
+																		<div class="alert alert-success" role="alert">
+																			<strong>short-term memory</strong>
+																			<%= record.Record[i]['short-term memory'][j] %>
+																		</div>
+																		<% } else { %>
+																			<div class="alert alert-danger" role="alert">
+																				<strong>short-term memory</strong>
+																				<%= record.Record[i]['short-term memory'][j] %>
+																			</div>
+																			<% } %>
+																				<% if (record.Record[i]['recall'][j] >= 50) { %>
+																					<div class="alert alert-success" role="alert">
+																						<strong>recall</strong>
+																						<%= record.Record[i]['recall'][j] %>
+																					</div>
+																					<% } else { %>
+																						<div class="alert alert-danger" role="alert">
+																							<strong>recall</strong>
+																							<%= record.Record[i]['recall'][j] %>
+																						</div>
+																						<% } %>
+																							<% if (record.Record[i]['self-efficacy'][j] >= 50) { %>
+																								<div class="alert alert-success" role="alert">
+																									<strong>self-efficacy</strong>
+																									<%= record.Record[i]['self-efficacy'][j] %>
+																								</div>
+																								<% } else { %>
+																									<div class="alert alert-danger" role="alert">
+																										<strong>self-efficacy</strong>
+																										<%= record.Record[i]['self-efficacy'][j] %>
+																									</div>
+																									<% } %>
+																										<% } else  {%>
+																											<% if (record.Record[i]['attention'][j] >= 50) { %>
+																												<div class="alert alert-success" role="alert">
+																													<strong>attention</strong>
+																													<%= record.Record[i]['attention'][j] %>
+																												</div>
+																												<% } else {%>
+																													<div class="alert alert-danger" role="alert">
+																														<strong>attention</strong>
+																														<%= record.Record[i]['attention'][j] %>
+																													</div>
+																													<% } %>
+																														<% } %>
+															</div>
+															<% } %>
+													</div>
+												</div>
+											</td>
 										</tr>
 										<% } %>
 								</tbody>
@@ -184,7 +260,7 @@
 							max: 100
 						},
 						pointLabels: {
-							  fontSize: 14
+							fontSize: 14
 						}
 					}
 				}
