@@ -40,18 +40,35 @@ app.post('/test', function (req, res, next) {
 	var distCount = nondistCount = 0;
 	record = req.body;
 	record['date'] = new Date();
-	record['short-term memory'] = record['recall'] = record['self-efficacy'] = record['attention'] = 0;
+	record['short-term memory'] = 0;
+	record['recall'] = 0;
+	record['self-efficacy'] = 0;
+	record['attention'] = 0;
 
 	for (var i in record.Record) {
+		record.Record[i]['short-term memory'] = [];
+		record.Record[i]['recall'] = [];
+		record.Record[i]['self-efficacy'] = [];
+		record.Record[i]['attention'] = [];
 		for (var j in record.Record[i].isDistractionHappendForCustomer) {
 			if (record.Record[i].isDistractionHappendForCustomer[j]) {
-				record['attention'] += 50 - 10 * record.Record[i].numOfWrongCounterAfterDistractionHappend[j]
-					+ 50 - 10 * record.Record[i].numOfHintsUsedAfterDistractionHappend[j];
+				record.Record[i]['attention'][j] = Math.max(0, 50 - 10 * record.Record[i].numOfWrongCounterAfterDistractionHappend[j]
+				+ 50 - 10 * record.Record[i].numOfHintsUsedAfterDistractionHappend[j]);
+				record.Record[i]['short-term memory'][j] = null;
+				record.Record[i]['recall'][j] = null;
+				record.Record[i]['self-efficacy'][j] = null;
+
+				record['attention'] += record.Record[i]['attention'][j];
 				distCount++;
 			} else {
-				record['short-term memory'] += 100 - Math.round(record.Record[i].theTimeUsedToServeCustomer[j]);
-				record['recall'] += 100 - 20 * record.Record[i].numOfWrongCounterForEachCustomer[j];
-				record['self-efficacy'] += 100 - 20 * record.Record[i].numOfHintsUsedForEachCustomer[j];
+				record.Record[i]['short-term memory'][j] = Math.max(0, 100 - Math.round(record.Record[i].theTimeUsedToServeCustomer[j]));
+				record.Record[i]['recall'][j] = Math.max(0, 100 - 20 * record.Record[i].numOfWrongCounterForEachCustomer[j]);
+				record.Record[i]['self-efficacy'][j] = Math.max(0, 100 - 20 * record.Record[i].numOfHintsUsedForEachCustomer[j]);
+				record.Record[i]['attention'][j] = null;
+				
+				record['short-term memory'] += record.Record[i]['short-term memory'][j];
+				record['recall'] += record.Record[i]['recall'][j];
+				record['self-efficacy'] += record.Record[i]['self-efficacy'][j];
 				nondistCount++;
 			}
 		}
@@ -62,15 +79,15 @@ app.post('/test', function (req, res, next) {
 		record['recall'] = null;
 		record['self-efficacy'] = null;
 	} else {
-		record['short-term memory'] = Math.max(0, record['short-term memory'] /= nondistCount);
-		record['recall'] = Math.max(0, record['recall'] /= nondistCount);
-		record['self-efficacy'] = Math.max(0, record['self-efficacy'] /= nondistCount);
+		record['short-term memory'] = record['short-term memory'] /= nondistCount;
+		record['recall'] = record['recall'] /= nondistCount;
+		record['self-efficacy'] = record['self-efficacy'] /= nondistCount;
 	}
 
 	if (distCount == 0) {
 		record['attention'] = null;
 	} else {
-		record['attention'] = Math.max(0, record['attention'] /= distCount);
+		record['attention'] = record['attention'] /= distCount;
 	}
 
 	MongoClient.connect(mongourl, function (err, client) {
