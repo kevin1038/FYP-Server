@@ -54,118 +54,69 @@
 										<th>Incorrect cook (after distraction)</th>
 										<th>Distraction</th>
 										<th>Performance</th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
 									<% for (var i in record.Record) { %>
-										<tr>
-											<td>
-												<%= parseInt(i)+1 %>
-											</td>
-											<td>
-												<%= record.Record[i].theTimeUsedToRememberTheitem %>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for (j in record.Record[i].theTimeUsedToServeCustomer) { %>
-														<li class="list-group-item">
-															Task
-															<%= parseInt(j)+1 %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].theTimeUsedToServeCustomer) { %>
-														<li class="list-group-item">
-															<%= Math.round(record.Record[i].theTimeUsedToServeCustomer[j]) %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].numOfHintsUsedForEachCustomer) { %>
-														<li class="list-group-item">
-															<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].numOfHintsUsedAfterDistractionHappend) { %>
-														<li class="list-group-item">
-															<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].numOfHintsUsedAfterWrongAnswer) { %>
-														<li class="list-group-item">
-															<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].numOfWrongCounterForEachCustomer) { %>
-														<li class="list-group-item">
-															<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].numOfWrongCounterAfterDistractionHappend) { %>
-														<li class="list-group-item">
-															<%= record.Record[i].numOfWrongCounterAfterDistractionHappend[j] %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<ul class="list-group">
-													<% for(j in record.Record[i].isDistractionHappendForCustomer) { %>
-														<li class="list-group-item">
-															<%= record.Record[i].isDistractionHappendForCustomer[j] %>
-														</li>
-														<% } %>
-												</ul>
-											</td>
-											<td>
-												<a class="btn btn-primary" data-toggle="collapse" href="#collapsePerformance<%=i%>" role="button" aria-expanded="false" aria-controls="collapsePerformance<%=i%>">
-													+
-												</a>
-											</td>
-										</tr>
-										<tr>
-											<td class="text-left" colspan="11">
-												<div class="collapse" id="collapsePerformance<%=i%>">
-													<div class="row">
-														<% for(j in record.Record[i]['description']) { %>
-															<div class="col-sm">
-																<h5>
-																	<span class="badge badge-secondary">Task
-																		<%= parseInt(j)+1 %>
-																	</span>
-																</h5>
-
-																<div class="alert alert-<%=record.Record[i]['alert'][j]%>" role="alert">
-																	<%= record.Record[i]['description'][j] %>
-																</div>
-															</div>
+										<% for (j in record.Record[i].theTimeUsedToServeCustomer) { %>
+											<tr>
+												<td>
+													<% if (j == 0) { %>
+														<%= parseInt(i)+1 %>
 															<% } %>
+												</td>
+												<td>
+													<% if (j == 0) { %>
+														<%= record.Record[i].theTimeUsedToRememberTheitem %>
+															<% } %>
+												</td>
+												<td>
+													Task
+													<%= parseInt(j)+1 %>
+												</td>
+												<td>
+													<%= Math.round(record.Record[i].theTimeUsedToServeCustomer[j]) %>
+												</td>
+												<td>
+													<%= record.Record[i].numOfHintsUsedForEachCustomer[j] %>
+												</td>
+												<td>
+													<%= record.Record[i].numOfHintsUsedAfterDistractionHappend[j] %>
+												</td>
+												<td>
+													<%= record.Record[i].numOfHintsUsedAfterWrongAnswer[j] %>
+												</td>
+												<td>
+													<%= record.Record[i].numOfWrongCounterForEachCustomer[j] %>
+												</td>
+												<td>
+													<%= record.Record[i].numOfWrongCounterAfterDistractionHappend[j] %>
+												</td>
+												<td>
+													<%= record.Record[i].isDistractionHappendForCustomer[j] %>
+												</td>
+												<td>
+													<a class="btn btn-primary" data-toggle="collapse" href="#collapsePerformance<%=i+j%>" role="button" aria-expanded="false"
+													 aria-controls="collapsePerformance<%=i%>">
+														+
+													</a>
+
+												</td>
+												<td>
+												<div class="collapse" id="collapsePerformance<%=i+j%>">
+													<div class="float-right row">
+														<div class="col-sm">
+															<div class="alert alert-<%=record.Record[i]['alert'][j]%>" role="alert">
+																<%= record.Record[i]['description'][j] %>
+															</div>
+														</div>
 													</div>
 												</div>
-											</td>
-										</tr>
-										<% } %>
+												</td>
+											</tr>
+											<% } %>
+												<% } %>
 								</tbody>
 							</table>
 						</div>
