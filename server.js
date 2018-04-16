@@ -46,29 +46,46 @@ app.post('/test', function (req, res, next) {
 	record['attention'] = 0;
 
 	for (var i in record.Record) {
-		record.Record[i]['short-term memory'] = [];
-		record.Record[i]['recall'] = [];
-		record.Record[i]['self-efficacy'] = [];
-		record.Record[i]['attention'] = [];
+		record.Record[i]['description'] = [];
+		record.Record[i]['alert'] = [];
+
 		for (var j in record.Record[i].isDistractionHappendForCustomer) {
 			if (record.Record[i].isDistractionHappendForCustomer[j]) {
-				record.Record[i]['attention'][j] = Math.max(0, 50 - 10 * record.Record[i].numOfWrongCounterAfterDistractionHappend[j]
-				+ 50 - 10 * record.Record[i].numOfHintsUsedAfterDistractionHappend[j]);
-				record.Record[i]['short-term memory'][j] = null;
-				record.Record[i]['recall'][j] = null;
-				record.Record[i]['self-efficacy'][j] = null;
+				if (record.Record[i].numOfWrongCounterAfterDistractionHappend[j] <= 2 && record.Record[i].numOfHintsUsedAfterDistractionHappend[j] <= 3 && record.Record[i].theTimeUsedToServeCustomer[j] <= 60) {
+					record.Record[i]['description'][j] = 'Well attention';
+					record.Record[i]['alert'][j] = 'success';
+				} else if (record.Record[i].numOfWrongCounterAfterDistractionHappend[j] > 2 && record.Record[i].numOfHintsUsedAfterDistractionHappend[j] > 3 && record.Record[i].theTimeUsedToServeCustomer[j] > 60) {
+					record.Record[i]['description'][j] = 'Lack of attention';
+					record.Record[i]['alert'][j] = 'danger';
+				} else {
+					record.Record[i]['description'][j] = 'Normal attention';
+					record.Record[i]['alert'][j] = 'primary';
+				}
 
-				record['attention'] += record.Record[i]['attention'][j];
+				record['attention'] += Math.max(0, 50 - 10 * record.Record[i].numOfWrongCounterAfterDistractionHappend[j]
+					+ 50 - 10 * record.Record[i].numOfHintsUsedAfterDistractionHappend[j]);
 				distCount++;
 			} else {
-				record.Record[i]['short-term memory'][j] = Math.max(0, 100 - Math.round(record.Record[i].theTimeUsedToServeCustomer[j]));
-				record.Record[i]['recall'][j] = Math.max(0, 100 - 20 * record.Record[i].numOfWrongCounterForEachCustomer[j]);
-				record.Record[i]['self-efficacy'][j] = Math.max(0, 100 - 20 * record.Record[i].numOfHintsUsedForEachCustomer[j]);
-				record.Record[i]['attention'][j] = null;
-				
-				record['short-term memory'] += record.Record[i]['short-term memory'][j];
-				record['recall'] += record.Record[i]['recall'][j];
-				record['self-efficacy'] += record.Record[i]['self-efficacy'][j];
+				if (record.Record[i].numOfWrongCounterForEachCustomer[j] <= 2 && record.Record[i].numOfHintsUsedForEachCustomer[j] <= 3 && record.Record[i].theTimeUsedToServeCustomer[j] <= 60) {
+					record.Record[i]['description'][j] = 'Well performance';
+					record.Record[i]['alert'][j] = 'success';
+				} else if (record.Record[i].numOfWrongCounterForEachCustomer[j] > 2 && record.Record[i].numOfHintsUsedForEachCustomer[j] > 3 && record.Record[i].theTimeUsedToServeCustomer[j] > 60) {
+					record.Record[i]['description'][j] = 'Poor performance';
+					record.Record[i]['alert'][j] = 'danger';
+				} else {
+					record.Record[i]['description'][j] = 'Normal performance';
+					if (record.Record[i].numOfWrongCounterForEachCustomer[j] > 2)
+						record.Record[i]['description'][j] += ', weak recall';
+					if (record.Record[i].numOfHintsUsedForEachCustomer[j] > 3)
+						record.Record[i]['description'][j] += ', weak self-efficacy';
+					if (record.Record[i].theTimeUsedToServeCustomer[j] > 60)
+						record.Record[i]['description'][j] += ', weak short-term memory';
+					record.Record[i]['alert'][j] = 'primary';
+				}
+
+				record['short-term memory'] += Math.max(0, 100 - Math.round(record.Record[i].theTimeUsedToServeCustomer[j]));
+				record['recall'] += Math.max(0, 100 - 20 * record.Record[i].numOfWrongCounterForEachCustomer[j]);
+				record['self-efficacy'] += Math.max(0, 100 - 20 * record.Record[i].numOfHintsUsedForEachCustomer[j]);
 				nondistCount++;
 			}
 		}
