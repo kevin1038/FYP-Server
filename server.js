@@ -29,6 +29,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
+// Authentication for URLs
 function auth(req, res, next) {
 	if (req.session.authenticated)
 		next();
@@ -36,7 +37,8 @@ function auth(req, res, next) {
 		res.redirect('/login');
 }
 
-app.post('/test', function (req, res, next) {
+// URL routing
+app.post('/upload', function (req, res, next) {
 	var distCount = nondistCount = 0;
 	record = req.body;
 	record['date'] = new Date();
@@ -217,6 +219,7 @@ app.post('/logout', function (req, res) {
 	res.redirect('/login');
 });
 
+// Database model functions
 function insertRecord(db, record, callback) {
 	db.collection('records').insertOne(record, function (err, result) {
 		assert.equal(null, err);
