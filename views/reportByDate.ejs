@@ -139,7 +139,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 		<script>
 			function generateData() {
-				var data = ['<%= record["short-term memory"] %>', '<%= record["recall"] %>', '<%= record["self-efficacy"] %>', '<%= record["attention"] %>'];
+				var data = ['<%= record["short-term memory"].toFixed(1) %>', '<%= record["recall"].toFixed(1) %>',
+					'<%= record["self-efficacy"].toFixed(1) %>', '<%= record["attention"].toFixed(1) %>'];
 				return data;
 			}
 

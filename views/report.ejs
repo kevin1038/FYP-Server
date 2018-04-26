@@ -74,7 +74,8 @@
 			});
 
 			function generateData() {
-				var data = ['<%= average[0].shortterm %>', '<%= average[0].recall %>', '<%= average[0].selfefficacy %>', '<%= average[0].attention %>'];
+				var data = ['<%= average[0].shortterm.toFixed(1) %>', '<%= average[0].recall.toFixed(1) %>',
+					'<%= average[0].selfefficacy.toFixed(1) %>', '<%= average[0].attention.toFixed(1) %>'];
 				return data;
 			}
 
