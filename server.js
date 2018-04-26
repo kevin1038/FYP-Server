@@ -286,4 +286,5 @@ function insertUser(db, user, callback) {
 	});
 }
 
+process.env.TZ = 'Asia/Hong_Kong';
 app.listen(process.env.PORT || 8099);
