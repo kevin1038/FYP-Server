@@ -41,7 +41,8 @@
 							<td>
 								<form action="/reportByDate" method="post">
 									<button type="submit" class="btn btn-link" name="id" value="<%= records[i]._id %>">
-										<%= moment(records[i].date).format("YYYY-MM-DD HH:mm") %>
+										<% moment.locale("zh-hk") %>
+											<%= moment(records[i].date).format("YYYY-MM-DD HH:mm") %>
 									</button>
 								</form>
 							</td>

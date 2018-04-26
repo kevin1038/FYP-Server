@@ -25,7 +25,8 @@
 			<div class="card text-center">
 				<h3 class="card-header">
 					<%= record.UserName %>'s Report on
-						<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
+						<% moment.locale("zh-hk") %>
+							<%= moment(record.date).format("YYYY-MM-DD HH:mm") %>
 				</h3>
 				<div class="card-body">
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -104,15 +105,15 @@
 
 												</td>
 												<td>
-												<div class="collapse" id="collapsePerformance<%=i+j%>">
-													<div class="float-right row">
-														<div class="col-sm">
-															<div class="alert alert-<%=record.Record[i]['alert'][j]%>" role="alert">
-																<%= record.Record[i]['description'][j] %>
+													<div class="collapse" id="collapsePerformance<%=i+j%>">
+														<div class="float-right row">
+															<div class="col-sm">
+																<div class="alert alert-<%=record.Record[i]['alert'][j]%>" role="alert">
+																	<%= record.Record[i]['description'][j] %>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
 												</td>
 											</tr>
 											<% } %>
