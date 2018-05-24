@@ -38,6 +38,7 @@
 						</li>
 					</ul>
 					<br />
+
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade show active" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
 							<table id="myTable" class="table table-hover table-responsive" cellspacing="0" width="100%">
@@ -120,9 +121,35 @@
 								</tbody>
 							</table>
 						</div>
+
 						<div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="performance-tab">
 							<div class="wrapper" style="max-width: 900px; margin: auto">
 								<canvas id="myChart"></canvas>
+								<br />
+								<button type="button" class="btn btn-primary">
+									Short-term memory
+									<span class="badge badge-light">
+										<%= record["short-term memory"].toFixed(1) %>
+									</span>
+								</button>
+								<button type="button" class="btn btn-success">
+									Recall
+									<span class="badge badge-light">
+										<%= record["recall"].toFixed(1) %>
+									</span>
+								</button>
+								<button type="button" class="btn btn-danger">
+									Self-efficacy
+									<span class="badge badge-light">
+										<%= record["self-efficacy"].toFixed(1) %>
+									</span>
+								</button>
+								<button type="button" class="btn btn-warning">
+									Attention
+									<span class="badge badge-light">
+										<%= record["attention"].toFixed(1) %>
+									</span>
+								</button>
 							</div>
 						</div>
 					</div>
